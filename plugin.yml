@@ -6,5 +6,7 @@ description: >
 commands:
   ep:
     description: Shows list of all possible commands.
+  ep-bal:
+    description: Shows players current balance.
   ep-pay:
     description: Allows players to send money to each other.

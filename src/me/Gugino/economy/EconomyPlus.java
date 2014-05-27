@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,11 +27,12 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 		saveConfig();
 	}
 	
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e){
 		Player p = e.getPlayer();
 		
 		if(!(getConfig().contains(p.getName()))){
-			getConfig().set(p.getName() + ".balance", "" + 0);
+			getConfig().set(p.getDisplayName() + ".balance", "" + 0);
 		}
 	}
 	
@@ -39,7 +41,13 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 		Player player = (Player) sender;
 		
 		if(label.equalsIgnoreCase("ep")){
-			player.sendMessage(ChatColor.DARK_AQUA + "[Economy Plus] " + ChatColor.AQUA + "/ep-pay <player> <amount>");
+			player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus - Help]");
+			player.sendMessage(ChatColor.AQUA + "/ep-bal");
+			player.sendMessage(ChatColor.AQUA + "/ep-pay <player> <amount>");
+		}
+		
+		if(label.equalsIgnoreCase("ep-bal")){
+			player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "Balance: " + ChatColor.AQUA + getConfig().getString(player.getDisplayName() + ".balance"));
 		}
 		
 		if(label.equalsIgnoreCase("ep-pay")){
@@ -53,6 +61,7 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 				
 				player.sendMessage("Transfer Player: " + targetPlayer.getDisplayName());
 				player.sendMessage("Transfer Amount: " + transferAmount);
+				player.sendMessage("Player Balance: " + getConfig().getString(player.getDisplayName() + ".balance"));
 			}
 		}
 		
