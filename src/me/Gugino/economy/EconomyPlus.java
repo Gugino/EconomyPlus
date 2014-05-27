@@ -38,14 +38,21 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 		
 		Player player = (Player) sender;
 		
+		if(label.equalsIgnoreCase("ep")){
+			player.sendMessage(ChatColor.DARK_AQUA + "[Economy Plus] " + ChatColor.AQUA + "/ep-pay <player> <amount>");
+		}
+		
 		if(label.equalsIgnoreCase("ep-pay")){
-			if(args.length == 0){
+			if(args.length == 0 || args.length == 1){
 				player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "Invalid Syntax: /ep-pay <player> <amount>");
 				return true;
 			}
-			if(args.length == 1){
+			if(args.length == 2){
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
+				String transferAmount = args[1];
 				
+				player.sendMessage("Transfer Player: " + targetPlayer.getDisplayName());
+				player.sendMessage("Transfer Amount: " + transferAmount);
 			}
 		}
 		

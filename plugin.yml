@@ -2,7 +2,9 @@ name: EconomyPlus
 main: me.Gugino.economy.EconomyPlus
 version: 0.1
 description: >
-             FusionScape Custom Plugin.
+             Simple Economy Plugin.
 commands:
+  ep:
+    description: Shows list of all possible commands.
   ep-pay:
-    description: shows a GUI with all possible warps.
+    description: Allows players to send money to each other.
