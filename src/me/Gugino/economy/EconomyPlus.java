@@ -59,9 +59,14 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				String transferAmount = args[1];
 				
-				player.sendMessage("Transfer Player: " + targetPlayer.getDisplayName());
-				player.sendMessage("Transfer Amount: " + transferAmount);
-				player.sendMessage("Player Balance: " + getConfig().getString(player.getDisplayName() + ".balance"));
+				getConfig().set(targetPlayer.getDisplayName() + ".balance", getConfig().getInt(targetPlayer.getDisplayName()+ ".balance" + transferAmount));
+				
+				targetPlayer.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + player.getName() + " has sent you " + "$"+transferAmount);
+				player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "You have sent " + targetPlayer.getDisplayName() + " " + "$" +transferAmount);
+				
+//				player.sendMessage("Transfer Player: " + targetPlayer.getDisplayName());
+//				player.sendMessage("Transfer Amount: " + transferAmount);
+//				player.sendMessage("Player Balance: " + getConfig().getString(player.getDisplayName() + ".balance"));
 			}
 		}
 		
