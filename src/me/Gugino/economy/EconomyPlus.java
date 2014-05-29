@@ -19,6 +19,13 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
 		logger.info("[EconomyPlus] has been enabled");
 		getConfig().options().copyDefaults(true);
+		
+		if(!(getConfig().contains(".currency"))){
+			getConfig().set(".currency", ""+"$");
+		}else{
+			saveConfig();
+		}
+		
 		saveConfig();
 	}
 	
@@ -31,8 +38,9 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 	public void onPlayerJoin(PlayerJoinEvent e){
 		Player p = e.getPlayer();
 		
-		if(!(getConfig().contains(p.getName()))){
-			getConfig().set(p.getDisplayName() + ".balance", "" + 0);
+		if(!(getConfig().contains(p.getDisplayName()))){
+			getConfig().set(p.getDisplayName() + ".balance", 0);
+			saveConfig();
 		}
 	}
 	
@@ -47,7 +55,7 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 		}
 		
 		if(label.equalsIgnoreCase("ep-bal")){
-			player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "Balance: " + ChatColor.AQUA + getConfig().getString(player.getDisplayName() + ".balance"));
+			player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "Balance: " + ChatColor.AQUA + getConfig().getString(".currency") + getConfig().getString(player.getDisplayName() + ".balance"));
 		}
 		
 		if(label.equalsIgnoreCase("ep-pay")){
@@ -58,11 +66,13 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 			if(args.length == 2){
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				String transferAmount = args[1];
+				int finalBal = Integer.parseInt(transferAmount);
 				
-				getConfig().set(targetPlayer.getDisplayName() + ".balance", getConfig().getInt(targetPlayer.getDisplayName()+ ".balance" + transferAmount));
+				getConfig().set(targetPlayer.getDisplayName() + ".balance", getConfig().getInt(targetPlayer.getDisplayName()+ ".balance") +  finalBal);
+				saveConfig();
 				
-				targetPlayer.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + player.getName() + " has sent you " + "$"+transferAmount);
-				player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "You have sent " + targetPlayer.getDisplayName() + " " + "$" +transferAmount);
+				targetPlayer.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + player.getName() + " has sent you " + getConfig().getString(".currency") + transferAmount);
+				player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "You have sent " + targetPlayer.getDisplayName() + " " + getConfig().getString(".currency") +transferAmount);
 				
 //				player.sendMessage("Transfer Player: " + targetPlayer.getDisplayName());
 //				player.sendMessage("Transfer Amount: " + transferAmount);
