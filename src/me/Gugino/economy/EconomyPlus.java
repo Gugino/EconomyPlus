@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class EconomyPlus extends JavaPlugin implements Listener{
 	public Logger logger = Logger.getLogger("Minecraft");
+	public String currencySymbol = "$"; 
 	
 	public void onEnable() {
 		Bukkit.getServer().getPluginManager().registerEvents(this, this);
@@ -21,7 +22,7 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 		getConfig().options().copyDefaults(true);
 		
 		if(!(getConfig().contains(".currency"))){
-			getConfig().set(".currency", ""+"$");
+			getConfig().set(".currency", "" + currencySymbol);
 		}else{
 			saveConfig();
 		}
@@ -67,16 +68,18 @@ public class EconomyPlus extends JavaPlugin implements Listener{
 				Player targetPlayer = Bukkit.getServer().getPlayer(args[0]);
 				String transferAmount = args[1];
 				int finalBal = Integer.parseInt(transferAmount);
+				int playerBalance = getConfig().getInt(player.getDisplayName() + ".balance");
+				if(playerBalance < finalBal){
+					player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.DARK_RED + "Insufficient Funds! " + ChatColor.AQUA + "Current Balance: " + getConfig().getString(".currency") + getConfig().getString(player.getDisplayName() + ".balance"));
+				}else{
+					getConfig().set(targetPlayer.getDisplayName() + ".balance", getConfig().getInt(targetPlayer.getDisplayName()+ ".balance") +  finalBal);
+					getConfig().set(player.getDisplayName() + ".balance", getConfig().getInt(player.getDisplayName() + ".balance") - finalBal);
+					saveConfig();
 				
-				getConfig().set(targetPlayer.getDisplayName() + ".balance", getConfig().getInt(targetPlayer.getDisplayName()+ ".balance") +  finalBal);
-				saveConfig();
-				
-				targetPlayer.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + player.getName() + " has sent you " + getConfig().getString(".currency") + transferAmount);
-				player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "You have sent " + targetPlayer.getDisplayName() + " " + getConfig().getString(".currency") +transferAmount);
-				
-//				player.sendMessage("Transfer Player: " + targetPlayer.getDisplayName());
-//				player.sendMessage("Transfer Amount: " + transferAmount);
-//				player.sendMessage("Player Balance: " + getConfig().getString(player.getDisplayName() + ".balance"));
+					targetPlayer.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + player.getName() + " has sent you " + getConfig().getString(".currency") + transferAmount);
+					player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + "You have sent " + targetPlayer.getDisplayName() + " " + getConfig().getString(".currency") +transferAmount);
+					player.sendMessage(ChatColor.DARK_AQUA + "[EconomyPlus] " + ChatColor.AQUA + getConfig().getString(".currency") + transferAmount + " has been taken from your account.");
+				}
 			}
 		}
 		
